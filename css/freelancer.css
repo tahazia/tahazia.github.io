@@ -186,8 +186,8 @@ section h2 {
   font-size: 3em;
 }
 section.success {
-  background: #0BBFFF;
-  color: white;
+  background: #000000;
+  color: #0BBFFF;
 }
 @media (max-width: 767px) {
   section {
