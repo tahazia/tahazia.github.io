@@ -1,43 +1,35 @@
 <?php
-if(isset($_POST['submit'])) 
-{
+    function validate(){
+        if(empty($_POST['name'])        ||
+           empty($_POST['email'])       ||
+           empty($_POST['phone'])       ||
+           empty($_POST['message']) ||
+           !filter_var($_POST['email'],FILTER_VALIDATE_EMAIL))
+           {
+            echo "No arguments Provided!";
+            return false;
+           }else{
+            return true;
+           }
+    }
 
-$message=
-'Full Name: '.$_POST['fullname'].'<br />
-Subject: '.$_POST['subject'].'<br />
-Phone:   '.$_POST['phone'].'<br />
-Email:   '.$_POST['emailid'].'<br />
-Comments:   '.$_POST['comments'].'
-';
-    require "PHPMailer-master/class.phpmailer.php"; //include phpmailer class
-      
-    // Instantiate Class  
-    $mail = new PHPMailer();  
-      
-    // Set up SMTP  
-    $mail->IsSMTP();                // Sets up a SMTP connection  
-    $mail->SMTPAuth = true;         // Connection with the SMTP does require authorization    
-    $mail->SMTPSecure = "ssl";      // Connect using a TLS connection  
-    $mail->Host = "smtp.gmail.com";  //Gmail SMTP server address
-    $mail->Port = 465;  //Gmail SMTP port
-    $mail->Encoding = '7bit';
-    
-    // Authentication  
-    $mail->Username   = "tziaweb@gmail.com"; // Your full Gmail address
-    $mail->Password   = "@mymail007"; // Your Gmail password
-      
-    // Compose
-    $mail->SetFrom($_POST['emailid'], $_POST['fullname']);
-    $mail->AddReplyTo($_POST['emailid'], $_POST['fullname']);
-    $mail->Subject = "New Contact Form Enquiry";      // Subject (which isn't required)  
-    $mail->MsgHTML($message);
- 
-    // Send To  
-    $mail->AddAddress("tziaweb@gmail.com", "Mr. Example"); // Where to send it - Recipient
-    $result = $mail->Send();     // Send!  
-   $message = $result ? '<div class="alert alert-success" role="alert"><strong>Success!</strong>Message Sent Successfully!</div>' : '<div class="alert alert-danger" role="alert"><strong>Error!</strong>There was a problem delivering the message.</div>';  
+    function send(){
+        $name = $_POST['name'];
+        $email_address = $_POST['email'];
+        $phone = $_POST['phone'];
+        $message = $_POST['message'];
+        $company = $_POST['company'];
 
-   unset($mail);
-
-}
+        // Create the email and send the message
+        $to = 'tzia08@email';
+        $email_subject = "Website Contact Form:  $name";
+        $email_body = "You have received a new message from your website contact form.\n\n"."Here are the details:\n\nName: $name\n\nEmail: $email_address\n\nPhone: $phone\n\nMessage:\n$message";
+        $headers = "From: noreply@tahazia.com\n"; // This is the email address the generated message will be from. We recommend using something like noreply@yourdomain.com.
+        $headers .= "Reply-To: $email_address"; 
+        mail($to,$email_subject,$email_body,$headers);
+        return true;
+    }
+    if(isset($_POST['send'])){
+        send();
+    }        
 ?>
